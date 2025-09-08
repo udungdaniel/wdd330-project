@@ -7,6 +7,14 @@ function addProductToCart(product) {
   // Get current cart (if any)
   let cart = JSON.parse(localStorage.getItem("so-cart")) || [];
 
+  // If nothing in localStorage, start with an empty array
+  if (!cart) {
+    cart = [];
+  }
+  // If cart is not already an array, wrap it in one
+  else if (!Array.isArray(cart)) {
+    cart = [cart];
+  }
   //Add nee product
   cart.push(product);
 
