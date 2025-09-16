@@ -3,6 +3,7 @@ import { renderListWithTemplate } from "./utils.mjs";
 function productCardTemplate(product) {
   return `
     <li class="product-card">
+<<<<<<< HEAD
       <a href="product_pages/${product.Id.toLowerCase()}.html">
         <img src="${product.Image}" alt="${product.Name}" />
         <h3 class="card__brand">${product.Brand?.Name || ""}</h3>
@@ -11,6 +12,16 @@ function productCardTemplate(product) {
       </a>
     </li>
   `;
+=======
+      <a href="product_pages/?products=${product.Id}">
+        <img src="${product.Image}" alt="${product.Name}">
+        <h2>${product.Brand.Name}</h2>
+        <h3>${product.Name}</h3>
+        <p class="product-card__price">$${product.FinalPrice}</p>
+      </a>
+    </li>
+    `;
+>>>>>>> 5324ca779c6c1c4940644e5c05b4e7a7109b34f6
 }
 
 export default class ProductList {
@@ -26,6 +37,17 @@ export default class ProductList {
   }
 
   renderList(list) {
+<<<<<<< HEAD
     renderListWithTemplate(productCardTemplate, this.listElement, list);
   }
+=======
+    // const htmlStrings = list.map(productCardTemplate);
+    // this.listElement.insertAdjacentHTML("afterbegin", htmlStrings.join(""));
+
+    // apply use new utility function instead of the commented code above
+    renderListWithTemplate(productCardTemplate, this.listElement, list);
+
+  }
+
+>>>>>>> 5324ca779c6c1c4940644e5c05b4e7a7109b34f6
 }
