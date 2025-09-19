@@ -32,10 +32,12 @@ function cartItemTemplate(item) {
 function prices() {
   let priceTotal;
   const cartItems = getLocalStorage("so-cart");
-  priceTotal = cartItems.reduce((priceTotal, element) => 
-    priceTotal + element.ListPrice, 0);
-  console.log(priceTotal)
-  const product = document.querySelector('.products');
+  priceTotal = cartItems.reduce(
+    (priceTotal, element) => priceTotal + element.ListPrice,
+    0,
+  );
+  console.log(priceTotal);
+  const product = document.querySelector(".products");
 
   if (product) {
     const totalDiv = document.createElement("div");
@@ -49,4 +51,3 @@ function prices() {
 }
 
 renderCartContents();
-

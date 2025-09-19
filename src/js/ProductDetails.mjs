@@ -44,6 +44,7 @@ function productDetailsTemplate(product) {
   document.getElementById('productDesc').innerHTML = product.DescriptionHtmlSimple;
 
   document.getElementById('addToCart').dataset.id = product.Id;
+  
 }
 
 // ************* Alternative Display Product Details Method *******************
