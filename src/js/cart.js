@@ -88,7 +88,6 @@ const newItem = `
   return newItem;
 }
 
-<<<<<<< HEAD
 function removeFromCartHandler(e) {
   const idToRemove = e.target.dataset.id;
   let cart = getLocalStorage("so-cart") || [];
@@ -112,27 +111,4 @@ if (emptyCartBtn) {
   emptyCartBtn.addEventListener("click", emptyCartHandler);
 }
 
-=======
-function prices() {
-  let priceTotal;
-  const cartItems = getLocalStorage("so-cart");
-  priceTotal = cartItems.reduce(
-    (priceTotal, element) => priceTotal + element.ListPrice,
-    0,
-  );
-  console.log(priceTotal);
-  const product = document.querySelector(".products");
-
-  if (product) {
-    const totalDiv = document.createElement("div");
-    totalDiv.style.backgroundColor = "black";
-    totalDiv.style.color = "white";
-    const total = document.createElement("p");
-    total.innerHTML = `Total Price = $${priceTotal > 0 ? priceTotal : 0}`;
-    totalDiv.append(total);
-    product.appendChild(totalDiv);
-  }
-}
-
->>>>>>> b7f42389af5151f838d3a43fb8e2e8d037072cf3
 renderCartContents();
