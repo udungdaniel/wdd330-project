@@ -1,52 +1,114 @@
 import { getLocalStorage } from "./utils.mjs";
 
 function renderCartContents() {
-  const cartItems = getLocalStorage("so-cart");
-  if (cartItems) {
-    const htmlItems = cartItems.map((item) => cartItemTemplate(item));
-    document.querySelector(".product-list").innerHTML = htmlItems.join("");
+  const cartItems = getLocalStorage("so-cart") || [];
 
-    prices();
+  // Group items by Id and count quantity
+  const grouped = {};
+  cartItems.forEach((item) => {
+    if (!grouped[item.Id]) {
+      grouped[item.Id] = { ...item, quantity: 1 };
+    } else {
+      grouped[item.Id].quantity += 1;
+    }
+  });
+  const groupedItems = Object.values(grouped);
+
+  if (groupedItems.length === 0) {
+    document.querySelector(".product-list").innerHTML =
+      "<p>Your cart is empty.</p>";
+    return;
+  }
+
+  const htmlItems = groupedItems.map((item) => cartItemTemplate(item));
+  document.querySelector(".product-list").innerHTML = htmlItems.join("");
+
+  // Add event listeners to all remove buttons
+  document.querySelectorAll('.remove-from-cart').forEach(btn => {
+    btn.addEventListener('click', removeFromCartHandler);
+  });
+
+  // Calculate totals
+  let originalTotal = 0;
+  let discountedTotal = 0;
+  groupedItems.forEach(item => {
+    const qty = item.quantity || 1;
+    const orig = item.SuggestedRetailPrice || item.ListPrice || item.FinalPrice || 0;
+    const disc = item.FinalPrice || item.ListPrice || 0;
+    originalTotal += orig * qty;
+    discountedTotal += disc * qty;
+  });
+  const discountAmount = originalTotal - discountedTotal;
+
+  // Display totals
+  const totalsDiv = document.getElementById('cart-totals');
+  if (totalsDiv) {
+    totalsDiv.innerHTML = `
+      <div class="cart-footer">
+        <p class="cart-total">Total: <span class="old-price">${formatPrice(originalTotal)}</span></p>
+        <p class="cart-total">Discount: <span class="discount-indicator">-${formatPrice(discountAmount)}</span></p>
+        <p class="cart-total">To Pay: <span class="new-price">${formatPrice(discountedTotal)}</span></p>
+      </div>
+    `;
   }
 }
 
+function formatPrice(price) {
+  return `$${price.toFixed(2)}`;
+}
+
 function cartItemTemplate(item) {
-  const newItem = `<li class="cart-card divider">
-  <a href="#" class="cart-card__image">
-    <img
-      src="${item.Image}"
-      alt="${item.Name}"
-    />
-  </a>
-  <a href="#">
-    <h2 class="card__name">${item.Name}</h2>
-  </a>
-  <p class="cart-card__color">${item.Colors[0].ColorName}</p>
-  <p class="cart-card__quantity">qty: 1</p>
-  <p class="cart-card__price">$${item.FinalPrice}</p>
-</li>`;
+  let priceHtml = '';
+  if (item.FinalPrice < item.SuggestedRetailPrice) {
+    const percent = Math.round(
+      ((item.SuggestedRetailPrice - item.FinalPrice) / item.SuggestedRetailPrice) * 100
+    );
+    priceHtml = `<span class="discount">-${percent}% OFF</span> <span class="old-price">${formatPrice(item.SuggestedRetailPrice)}</span> <span class="new-price">${formatPrice(item.FinalPrice)}</span>`;
+  } else {
+    priceHtml = formatPrice(item.FinalPrice);
+  }
+  
+const newItem = `
+  <li class="cart-card divider">
+    <span class="remove-from-cart" data-id="${item.Id}" style="cursor:pointer; color:red; float:right; font-weight:bold;">&times;</span>
+    <a href="#" class="cart-card__image">
+      <img
+        src="${item.Image}"
+        alt="${item.Name}"
+      />
+    </a>
+    <a href="#">
+      <h2 class="card__name">${item.Name}</h2>
+    </a>
+    <p class="cart-card__color">${item.Colors[0].ColorName}</p>
+    <p class="cart-card__quantity">qty: ${item.quantity || 1}</p>
+    <p class="cart-card__price">${priceHtml}</p>
+  </li>`;
 
   return newItem;
 }
 
-function prices() {
-  let priceTotal;
-  const cartItems = getLocalStorage("so-cart");
-  priceTotal = cartItems.reduce((priceTotal, element) => 
-    priceTotal + element.ListPrice, 0);
-  console.log(priceTotal)
-  const product = document.querySelector('.products');
-
-  if (product) {
-    const totalDiv = document.createElement("div");
-    totalDiv.style.backgroundColor = "black";
-    totalDiv.style.color = "white";
-    const total = document.createElement("p");
-    total.innerHTML = `Total Price = $${priceTotal > 0 ? priceTotal : 0}`;
-    totalDiv.append(total);
-    product.appendChild(totalDiv);
+function removeFromCartHandler(e) {
+  const idToRemove = e.target.dataset.id;
+  let cart = getLocalStorage("so-cart") || [];
+  // Remove the desired item
+  const index = cart.findIndex(item => String(item.Id) === String(idToRemove));
+  if (index !== -1) {
+    cart.splice(index, 1);
+    localStorage.setItem("so-cart", JSON.stringify(cart));
+    renderCartContents();
   }
 }
 
-renderCartContents();
+// handle emptying the cart
+function emptyCartHandler() {
+  localStorage.removeItem("so-cart");
+  renderCartContents();
+}
+// event listener for emptying the cart
+const emptyCartBtn = document.getElementById("emptyCart");
+if (emptyCartBtn) {
+  emptyCartBtn.addEventListener("click", emptyCartHandler);
+}
 
+renderCartContents();
