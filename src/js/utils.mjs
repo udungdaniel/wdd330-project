@@ -22,6 +22,7 @@ export function setClick(selector, callback) {
   qs(selector).addEventListener("click", callback);
 }
 
+<<<<<<< HEAD
 // Render a single template into a parent element, with optional callback
 export function renderWithTemplate(template, parentElement, data, callback) {
   parentElement.innerHTML = template;
@@ -49,4 +50,10 @@ export async function loadHeaderFooter() {
     const footerTemplate = await loadTemplate('/partials/footer.html');
     renderWithTemplate(footerTemplate, footer);
   }
+=======
+export function renderListWithTemplate(templateFn, parentElement, list, position = "afterbegin", clear = false) {
+  if (clear) parentElement.innerHTML = "";
+  const htmlStrings = list.map(templateFn);
+  parentElement.insertAdjacentHTML(position, htmlStrings.join(""));
+>>>>>>> b7f42389af5151f838d3a43fb8e2e8d037072cf3
 }

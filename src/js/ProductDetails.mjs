@@ -47,7 +47,16 @@ function productDetailsTemplate(product) {
   document.querySelector("#p-color").textContent = product.Colors[0].ColorName;
   document.querySelector("#p-description").innerHTML = product.DescriptionHtmlSimple;
 
+<<<<<<< HEAD
   document.querySelector("#add-to-cart").dataset.id = product.Id;
+=======
+  document.getElementById('productPrice').textContent = product.FinalPrice;
+  document.getElementById('productColor').textContent = product.Colors[0].ColorName;
+  document.getElementById('productDesc').innerHTML = product.DescriptionHtmlSimple;
+
+  document.getElementById('addToCart').dataset.id = product.Id;
+  
+>>>>>>> b7f42389af5151f838d3a43fb8e2e8d037072cf3
 }
 
 // ************* Alternative Display Product Details Method *******************

@@ -10,6 +10,7 @@ function addProductToCart(product) {
   // Add the new product to the cart
   cart.push(product);
 
+<<<<<<< HEAD
   // Save the updated cart back to localStorage
   setLocalStorage("so-cart", cart);
 }
@@ -102,3 +103,9 @@ if (document.querySelector('.product-detail')) {
     });
   }
 }
+=======
+// // add listener to Add to Cart button
+// document
+//   .getElementById("addToCart")
+//   .addEventListener("click", addToCartHandler);
+>>>>>>> b7f42389af5151f838d3a43fb8e2e8d037072cf3
