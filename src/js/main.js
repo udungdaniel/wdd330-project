@@ -1,21 +1,15 @@
-import ProductData from "./ProductData.mjs";
-import ProductList from "./ProductList.mjs";
+// Moves product rendering logic to a new file
+import { loadHeaderFooter } from "./utils.mjs";
+import { updateProductCards } from "./product-listing.js";
 
-const dataSource = new ProductData("tents");
-<<<<<<< HEAD
-const productListElement = document.querySelector(".product-list");
-const productList = new ProductList("tents", dataSource, productListElement);
-productList.init();
+loadHeaderFooter();
+updateProductCards();
 
-<script src="js/main.js" type="module"></script>
-=======
 
-const element = document.querySelector(".product-list");
+    setTimeout(() => {
+    const cart = JSON.parse(localStorage.getItem("so-cart")) || [];
+    const sup = document.getElementById("cart-count");
+        sup.innerHTML = cart.length;
+    }, 2000);
 
-const productList = new ProductList("Tents", dataSource, element);
-
-productList.init();
-<<<<<<< HEAD
-=======
->>>>>>> 5324ca779c6c1c4940644e5c05b4e7a7109b34f6
->>>>>>> cf237d8617a28cf1fbd276d7658ce0ceddaf7765
+// Render discounts for homepage products
