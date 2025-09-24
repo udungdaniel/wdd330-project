@@ -23,8 +23,6 @@ function cartItemTemplate(item) {
   return newItem;
 }
 
-
-
 function calculateCartTotal(items) {
   // if (!items || items.length === 0) return;
   let total = 0;
@@ -40,4 +38,3 @@ function calculateCartTotal(items) {
 const cartItems = getLocalStorage("so-cart");
 renderCartContents(cartItems);
 calculateCartTotal(cartItems);
-

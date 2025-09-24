@@ -36,13 +36,13 @@ function renderCartContents() {
     totalsDiv.innerHTML = `
       <div class="cart-footer">
         <p class="cart-total">Total: <span class="old-price">${formatPrice(
-          originalTotal
+          originalTotal,
         )}</span></p>
         <p class="cart-total">Discount: <span class="discount-indicator">-${formatPrice(
-          discountAmount
+          discountAmount,
         )}</span></p>
         <p class="cart-total">To Pay: <span class="new-price">${formatPrice(
-          discountedTotal
+          discountedTotal,
         )}</span></p>
       </div>
     `;
@@ -59,10 +59,10 @@ function cartItemTemplate(item) {
     const percent = Math.round(
       ((item.SuggestedRetailPrice - item.FinalPrice) /
         item.SuggestedRetailPrice) *
-        100
+        100,
     );
     priceHtml = `<span class="discount">-${percent}% OFF</span> <span class="old-price">${formatPrice(
-      item.SuggestedRetailPrice
+      item.SuggestedRetailPrice,
     )}</span> <span class="new-price">${formatPrice(item.FinalPrice)}</span>`;
   } else {
     priceHtml = formatPrice(item.FinalPrice);
@@ -94,7 +94,9 @@ function removeFromCartHandler(e) {
   const idToRemove = e.target.dataset.id;
   let cart = getLocalStorage("so-cart") || [];
   // Remove the desired item
-  const index = cart.findIndex((item) => String(item.Id) === String(idToRemove));
+  const index = cart.findIndex(
+    (item) => String(item.Id) === String(idToRemove),
+  );
   if (index !== -1) {
     cart.splice(index, 1);
     localStorage.setItem("so-cart", JSON.stringify(cart));
@@ -107,7 +109,7 @@ export function addToCart(product) {
   let cart = getLocalStorage("so-cart") || [];
 
   const existingIndex = cart.findIndex(
-    (item) => String(item.Id) === String(product.Id)
+    (item) => String(item.Id) === String(product.Id),
   );
 
   if (existingIndex !== -1) {

@@ -130,13 +130,13 @@
       }
     ],
     "DescriptionHtmlSimple": "Ultra-strong, soft, and packable hammock for solo adventurers.",
-    "SuggestedRetailPrice": 79.00,
+    "SuggestedRetailPrice": 79.0,
     "Brand": {
       "Id": "KAMMOK",
       "LogoSrc": "../images/logos/hammocks.svg",
       "Name": "Kammok"
     },
-    "ListPrice": 74.00,
-    "FinalPrice": 74.00
+    "ListPrice": 74.0,
+    "FinalPrice": 74.0
   }
 ]

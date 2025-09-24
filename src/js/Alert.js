@@ -11,7 +11,7 @@ export default class Alert {
       if (!alerts || !alerts.length) return;
       const section = document.createElement("section");
       section.className = "alert-list";
-      alerts.forEach(alert => {
+      alerts.forEach((alert) => {
         const p = document.createElement("p");
         p.textContent = alert.message;
         p.style.background = alert.background;
@@ -23,8 +23,8 @@ export default class Alert {
         main.prepend(section);
       }
     } catch (e) {
-    // Optionally log error
-    console.error("Failed to load alerts:", e);
+      // Optionally log error
+      console.error("Failed to load alerts:", e);
     }
   }
 }

@@ -67,19 +67,19 @@ function updateProductDetail(product) {
     const percent = Math.round(
       ((product.SuggestedRetailPrice - product.FinalPrice) /
         product.SuggestedRetailPrice) *
-        100
+        100,
     );
     // Add badge
     priceElem.parentElement.insertBefore(
       createDiscountBadge(percent),
-      priceElem
+      priceElem,
     );
     // Show old price with strikethrough
     const oldPrice = document.createElement("span");
     oldPrice.className = "old-price";
     oldPrice.textContent = formatPrice(product.SuggestedRetailPrice);
     priceElem.innerHTML = `<span class="new-price">${formatPrice(
-      product.FinalPrice
+      product.FinalPrice,
     )}</span>`;
     priceElem.insertBefore(oldPrice, priceElem.firstChild);
   } else {
@@ -88,15 +88,17 @@ function updateProductDetail(product) {
 }
 
 // If on a product detail page, try to get product data and update price display
-if (document.querySelector('.product-detail')) {
+if (document.querySelector(".product-detail")) {
   // Extract product id from button or data attribute
-  const addToCartBtn = document.getElementById('addToCart');
+  const addToCartBtn = document.getElementById("addToCart");
   let productId = addToCartBtn ? addToCartBtn.dataset.id : null;
   if (productId) {
-    import('./ProductData.mjs').then(({ default: ProductData }) => {
-      const dataSource = new ProductData('tents');
-      dataSource.getData().then(products => {
-        const product = products.find(p => p.Id === productId || p.Id === productId.toLowerCase());
+    import("./ProductData.mjs").then(({ default: ProductData }) => {
+      const dataSource = new ProductData("tents");
+      dataSource.getData().then((products) => {
+        const product = products.find(
+          (p) => p.Id === productId || p.Id === productId.toLowerCase(),
+        );
         updateProductDetail(product);
       });
     });
