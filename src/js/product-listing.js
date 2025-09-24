@@ -28,7 +28,7 @@ export function updateProductCards(products) {
           product.SuggestedRetailPrice) *
           100
       );
-      // Add badge
+      // Add badge.
       priceElem.parentElement.insertBefore(
         createDiscountBadge(percent),
         priceElem
