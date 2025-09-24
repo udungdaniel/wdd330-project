@@ -3,37 +3,27 @@ import { getLocalStorage } from "./utils.mjs";
 function renderCartContents() {
   const cartItems = getLocalStorage("so-cart") || [];
 
-  // Group items by Id and count quantity
-  const grouped = {};
-  cartItems.forEach((item) => {
-    if (!grouped[item.Id]) {
-      grouped[item.Id] = { ...item, quantity: 1 };
-    } else {
-      grouped[item.Id].quantity += 1;
-    }
-  });
-  const groupedItems = Object.values(grouped);
-
-  if (groupedItems.length === 0) {
+  if (cartItems.length === 0) {
     document.querySelector(".product-list").innerHTML =
       "<p>Your cart is empty.</p>";
     return;
   }
 
-  const htmlItems = groupedItems.map((item) => cartItemTemplate(item));
+  const htmlItems = cartItems.map((item) => cartItemTemplate(item));
   document.querySelector(".product-list").innerHTML = htmlItems.join("");
 
   // Add event listeners to all remove buttons
-  document.querySelectorAll('.remove-from-cart').forEach(btn => {
-    btn.addEventListener('click', removeFromCartHandler);
+  document.querySelectorAll(".remove-from-cart").forEach((btn) => {
+    btn.addEventListener("click", removeFromCartHandler);
   });
 
   // Calculate totals
   let originalTotal = 0;
   let discountedTotal = 0;
-  groupedItems.forEach(item => {
+  cartItems.forEach((item) => {
     const qty = item.quantity || 1;
-    const orig = item.SuggestedRetailPrice || item.ListPrice || item.FinalPrice || 0;
+    const orig =
+      item.SuggestedRetailPrice || item.ListPrice || item.FinalPrice || 0;
     const disc = item.FinalPrice || item.ListPrice || 0;
     originalTotal += orig * qty;
     discountedTotal += disc * qty;
@@ -41,13 +31,19 @@ function renderCartContents() {
   const discountAmount = originalTotal - discountedTotal;
 
   // Display totals
-  const totalsDiv = document.getElementById('cart-totals');
+  const totalsDiv = document.getElementById("cart-totals");
   if (totalsDiv) {
     totalsDiv.innerHTML = `
       <div class="cart-footer">
-        <p class="cart-total">Total: <span class="old-price">${formatPrice(originalTotal)}</span></p>
-        <p class="cart-total">Discount: <span class="discount-indicator">-${formatPrice(discountAmount)}</span></p>
-        <p class="cart-total">To Pay: <span class="new-price">${formatPrice(discountedTotal)}</span></p>
+        <p class="cart-total">Total: <span class="old-price">${formatPrice(
+          originalTotal
+        )}</span></p>
+        <p class="cart-total">Discount: <span class="discount-indicator">-${formatPrice(
+          discountAmount
+        )}</span></p>
+        <p class="cart-total">To Pay: <span class="new-price">${formatPrice(
+          discountedTotal
+        )}</span></p>
       </div>
     `;
   }
@@ -58,19 +54,25 @@ function formatPrice(price) {
 }
 
 function cartItemTemplate(item) {
-  let priceHtml = '';
+  let priceHtml = "";
   if (item.FinalPrice < item.SuggestedRetailPrice) {
     const percent = Math.round(
-      ((item.SuggestedRetailPrice - item.FinalPrice) / item.SuggestedRetailPrice) * 100
+      ((item.SuggestedRetailPrice - item.FinalPrice) /
+        item.SuggestedRetailPrice) *
+        100
     );
-    priceHtml = `<span class="discount">-${percent}% OFF</span> <span class="old-price">${formatPrice(item.SuggestedRetailPrice)}</span> <span class="new-price">${formatPrice(item.FinalPrice)}</span>`;
+    priceHtml = `<span class="discount">-${percent}% OFF</span> <span class="old-price">${formatPrice(
+      item.SuggestedRetailPrice
+    )}</span> <span class="new-price">${formatPrice(item.FinalPrice)}</span>`;
   } else {
     priceHtml = formatPrice(item.FinalPrice);
   }
-  
-const newItem = `
+
+  const newItem = `
   <li class="cart-card divider">
-    <span class="remove-from-cart" data-id="${item.Id}" style="cursor:pointer; color:red; float:right; font-weight:bold;">&times;</span>
+    <span class="remove-from-cart" data-id="${
+      item.Id
+    }" style="cursor:pointer; color:red; float:right; font-weight:bold;">&times;</span>
     <a href="#" class="cart-card__image">
       <img
         src="${item.Image}"
@@ -92,12 +94,32 @@ function removeFromCartHandler(e) {
   const idToRemove = e.target.dataset.id;
   let cart = getLocalStorage("so-cart") || [];
   // Remove the desired item
-  const index = cart.findIndex(item => String(item.Id) === String(idToRemove));
+  const index = cart.findIndex((item) => String(item.Id) === String(idToRemove));
   if (index !== -1) {
     cart.splice(index, 1);
     localStorage.setItem("so-cart", JSON.stringify(cart));
     renderCartContents();
   }
+}
+
+// NEW: addToCart function with quantity check
+export function addToCart(product) {
+  let cart = getLocalStorage("so-cart") || [];
+
+  const existingIndex = cart.findIndex(
+    (item) => String(item.Id) === String(product.Id)
+  );
+
+  if (existingIndex !== -1) {
+    // Increment quantity
+    cart[existingIndex].quantity = (cart[existingIndex].quantity || 1) + 1;
+  } else {
+    // Add new item
+    cart.push({ ...product, quantity: 1 });
+  }
+
+  localStorage.setItem("so-cart", JSON.stringify(cart));
+  renderCartContents();
 }
 
 // handle emptying the cart
