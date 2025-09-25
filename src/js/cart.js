@@ -8,7 +8,7 @@ function renderCartContents() {
   if (!productList) return; // safety check
 
   if (cartItems.length === 0) {
-    productList.innerHTML = "<p>Your cart is empty at the moment, please make a purchase while stck last.</p>";
+    productList.innerHTML = "<p>Your cart is empty at the moment, please make a purchase while stock last.</p>";
     if (totalsDiv) totalsDiv.innerHTML = ""; // clear totals
     return;
   }
