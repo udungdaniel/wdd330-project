@@ -2,22 +2,26 @@ import { getLocalStorage } from "./utils.mjs";
 
 function renderCartContents() {
   const cartItems = getLocalStorage("so-cart") || [];
+  const productList = document.querySelector(".product-list");
+  const totalsDiv = document.getElementById("cart-totals");
+
+  if (!productList) return; // safety check
 
   if (cartItems.length === 0) {
-    document.querySelector(".product-list").innerHTML =
-      "<p>Your cart is empty.</p>";
+    productList.innerHTML = "<p>Your cart is empty at the moment, please make a purchase.</p>";
+    if (totalsDiv) totalsDiv.innerHTML = ""; // clear totals
     return;
   }
 
   const htmlItems = cartItems.map((item) => cartItemTemplate(item));
-  document.querySelector(".product-list").innerHTML = htmlItems.join("");
+  productList.innerHTML = htmlItems.join("");
 
-  // Add event listeners to all remove buttons
+  // add event listeners to remove buttons
   document.querySelectorAll(".remove-from-cart").forEach((btn) => {
     btn.addEventListener("click", removeFromCartHandler);
   });
 
-  // Calculate totals
+  // totals calculation
   let originalTotal = 0;
   let discountedTotal = 0;
   cartItems.forEach((item) => {
@@ -30,24 +34,23 @@ function renderCartContents() {
   });
   const discountAmount = originalTotal - discountedTotal;
 
-  // Display totals
-  const totalsDiv = document.getElementById("cart-totals");
   if (totalsDiv) {
     totalsDiv.innerHTML = `
       <div class="cart-footer">
         <p class="cart-total">Total: <span class="old-price">${formatPrice(
-          originalTotal,
-        )}</span></p>
+      originalTotal
+    )}</span></p>
         <p class="cart-total">Discount: <span class="discount-indicator">-${formatPrice(
-          discountAmount,
-        )}</span></p>
+      discountAmount
+    )}</span></p>
         <p class="cart-total">To Pay: <span class="new-price">${formatPrice(
-          discountedTotal,
-        )}</span></p>
+      discountedTotal
+    )}</span></p>
       </div>
     `;
   }
 }
+
 
 function formatPrice(price) {
   return `$${price.toFixed(2)}`;
@@ -59,7 +62,7 @@ function cartItemTemplate(item) {
     const percent = Math.round(
       ((item.SuggestedRetailPrice - item.FinalPrice) /
         item.SuggestedRetailPrice) *
-        100,
+      100,
     );
     priceHtml = `<span class="discount">-${percent}% OFF</span> <span class="old-price">${formatPrice(
       item.SuggestedRetailPrice,
@@ -70,8 +73,7 @@ function cartItemTemplate(item) {
 
   const newItem = `
   <li class="cart-card divider">
-    <span class="remove-from-cart" data-id="${
-      item.Id
+    <span class="remove-from-cart" data-id="${item.Id
     }" style="cursor:pointer; color:red; float:right; font-weight:bold;">&times;</span>
     <a href="#" class="cart-card__image">
       <img

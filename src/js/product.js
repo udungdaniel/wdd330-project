@@ -1,106 +1,37 @@
-import { setLocalStorage } from "./utils.mjs";
-import ProductData from "./ProductData.mjs";
+// src/js/product.js
+import { getParam } from "./utils.mjs";
+import { findProductById } from "./productData.mjs";
+import { addProductToCart } from "./cart.js";
 
-const dataSource = new ProductData("tents");
+// Grab the product id from the URL (?product=...)
+const productId = getParam("product");
 
-function addProductToCart(product) {
-  // Retrieve the existing cart from localStorage
-  const cart = JSON.parse(localStorage.getItem("so-cart")) || [];
+// Find the matching product in the inventory
+const product = await findProductById(productId);
 
-  // Add the new product to the cart
-  cart.push(product);
-
-  // Save the updated cart back to localStorage
-  setLocalStorage("so-cart", cart);
-}
-
-// add to cart button event handler
-async function addToCartHandler(e) {
-  try {
-    console.log("Add to Cart button clicked", e.target.dataset.id);
-    const product = await dataSource.findProductById(e.target.dataset.id);
-
+// Render product details on the page
+function renderProductDetails(product) {
     if (!product) {
-      console.error("Product not found for ID:", e.target.dataset.id);
-      return;
+        document.querySelector(".product-detail").innerHTML =
+            "<p>Sorry, product not found.</p>";
+        return;
     }
 
-    console.log("Product found:", product);
-    addProductToCart(product);
+    document.getElementById("productBrand").textContent = product.Brand;
+    document.getElementById("productName").textContent = product.Name;
+    document.getElementById("productImage").src = product.Image;
+    document.getElementById("productImage").alt = product.Name;
+    document.getElementById("productPrice").textContent = `$${product.FinalPrice}`;
+    document.getElementById("productColor").textContent = product.Colors.join(", ");
+    document.getElementById("productDesc").textContent = product.Description;
 
-    // Display success message
-    const messageDiv = document.createElement("div");
-    messageDiv.textContent = "Successfully added to cart!";
-    messageDiv.style.color = "green";
-    messageDiv.style.marginTop = "10px";
-    e.target.parentElement.appendChild(messageDiv);
-
-    // Remove the message after 3 seconds
-    setTimeout(() => {
-      messageDiv.remove();
-    }, 3000);
-  } catch (error) {
-    console.error("Error adding product to cart:", error);
-  }
-}
-
-// add listener to Add to Cart button
-document
-  .getElementById("addToCart")
-  .addEventListener("click", addToCartHandler);
-
-function formatPrice(price) {
-  return `$${price.toFixed(2)}`;
-}
-
-function createDiscountBadge(percent) {
-  const badge = document.createElement("span");
-  badge.className = "discount-indicator";
-  badge.textContent = `-${percent}% OFF`;
-  return badge;
-}
-
-function updateProductDetail(product) {
-  const priceElem = document.querySelector(".product-card__price");
-  if (!priceElem || !product) return;
-  if (product.FinalPrice < product.SuggestedRetailPrice) {
-    const percent = Math.round(
-      ((product.SuggestedRetailPrice - product.FinalPrice) /
-        product.SuggestedRetailPrice) *
-        100,
-    );
-    // Add badge
-    priceElem.parentElement.insertBefore(
-      createDiscountBadge(percent),
-      priceElem,
-    );
-    // Show old price with strikethrough
-    const oldPrice = document.createElement("span");
-    oldPrice.className = "old-price";
-    oldPrice.textContent = formatPrice(product.SuggestedRetailPrice);
-    priceElem.innerHTML = `<span class="new-price">${formatPrice(
-      product.FinalPrice,
-    )}</span>`;
-    priceElem.insertBefore(oldPrice, priceElem.firstChild);
-  } else {
-    priceElem.textContent = formatPrice(product.FinalPrice);
-  }
-}
-
-// If on a product detail page, try to get product data and update price display
-if (document.querySelector(".product-detail")) {
-  // Extract product id from button or data attribute
-  const addToCartBtn = document.getElementById("addToCart");
-  let productId = addToCartBtn ? addToCartBtn.dataset.id : null;
-  if (productId) {
-    import("./ProductData.mjs").then(({ default: ProductData }) => {
-      const dataSource = new ProductData("tents");
-      dataSource.getData().then((products) => {
-        const product = products.find(
-          (p) => p.Id === productId || p.Id === productId.toLowerCase(),
-        );
-        updateProductDetail(product);
-      });
+    // set the productId on the button
+    const addBtn = document.getElementById("addToCart");
+    addBtn.dataset.id = product.Id;
+    addBtn.addEventListener("click", () => {
+        addProductToCart(product.Id);
+        alert(`${product.Name} added to cart!`);
     });
-  }
 }
+
+renderProductDetails(product);
