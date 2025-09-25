@@ -1,25 +1,27 @@
-// wrapper for querySelector...returns matching element
+// Wrapper for querySelector...returns matching element
 export function qs(selector, parent = document) {
   return parent.querySelector(selector);
 }
 
-// retrieve data from localstorage
+// Retrieve data from localStorage
 export function getLocalStorage(key) {
   return JSON.parse(localStorage.getItem(key));
 }
 
-// save data to local storage
+// Save data to localStorage
 export function setLocalStorage(key, data) {
   localStorage.setItem(key, JSON.stringify(data));
 }
 
-// set a listener for both touchend and click
+// Set a listener for both touchend and click
 export function setClick(selector, callback) {
-  qs(selector).addEventListener("touchend", (event) => {
+  const element = qs(selector);
+  if (!element) return;
+  element.addEventListener("touchend", (event) => {
     event.preventDefault();
     callback();
   });
-  qs(selector).addEventListener("click", callback);
+  element.addEventListener("click", callback);
 }
 
 // Render a single template into a parent element, with optional callback
@@ -33,20 +35,27 @@ export function renderWithTemplate(template, parentElement, data, callback) {
 // Load an HTML template from a path asynchronously
 export async function loadTemplate(path) {
   const res = await fetch(path);
-  const template = await res.text();
-  return template;
+  if (!res.ok) {
+    console.error(`Failed to load template: ${path}`, res.status);
+    return "";
+  }
+  return await res.text();
 }
 
-// Load header and footer partials into #header and #footer
+// Load header and footer partials into #main-header and #main-footer
 export async function loadHeaderFooter() {
-  const header = document.getElementById("header");
-  const footer = document.getElementById("footer");
+  const header = document.getElementById("main-header");
+  const footer = document.getElementById("main-footer");
+
   if (header) {
-    const headerTemplate = await loadTemplate("/partials/header.html");
+    // adjust relative path if needed
+    const headerTemplate = await loadTemplate("../partials/header.html");
     renderWithTemplate(headerTemplate, header);
   }
+
   if (footer) {
-    const footerTemplate = await loadTemplate("/partials/footer.html");
+    // adjust relative path if needed
+    const footerTemplate = await loadTemplate("../partials/footer.html");
     renderWithTemplate(footerTemplate, footer);
   }
 }
@@ -72,4 +81,3 @@ export function renderListWithTemplate(
   const htmlStrings = list.map(templateFn);
   parentElement.insertAdjacentHTML(position, htmlStrings.join(""));
 }
-
