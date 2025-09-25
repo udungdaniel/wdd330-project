@@ -10,6 +10,8 @@ function renderCartContents() {
   if (cartItems.length === 0) {
     productList.innerHTML =
       "<p>Your cart is empty at the moment, please make a purchase.</p>";
+    productList.innerHTML =
+      "<p>Your cart is empty at the moment, please make a purchase.</p>";
     if (totalsDiv) totalsDiv.innerHTML = ""; // clear totals
     updateCartCount(0);
     return;
@@ -18,12 +20,10 @@ function renderCartContents() {
   const htmlItems = cartItems.map((item) => cartItemTemplate(item));
   productList.innerHTML = htmlItems.join("");
 
-  // add event listeners to remove buttons
   document.querySelectorAll(".remove-from-cart").forEach((btn) => {
     btn.addEventListener("click", removeFromCartHandler);
   });
 
-  // totals calculation
   let originalTotal = 0;
   let discountedTotal = 0;
   cartItems.forEach((item) => {
@@ -72,6 +72,7 @@ function cartItemTemplate(item) {
     );
     priceHtml = `<span class="discount">-${percent}% OFF</span> <span class="old-price">${formatPrice(
       item.SuggestedRetailPrice
+      item.SuggestedRetailPrice
     )}</span> <span class="new-price">${formatPrice(item.FinalPrice)}</span>`;
   } else {
     priceHtml = formatPrice(item.FinalPrice);
@@ -88,6 +89,7 @@ function cartItemTemplate(item) {
       item.Id
     }" style="cursor:pointer; color:red; float:right; font-weight:bold;">&times;</span>
     <a href="#" class="cart-card__image">
+      <img src="${item.Image}" alt="${item.Name}" />
       <img src="${item.Image}" alt="${item.Name}" />
     </a>
     <a href="#">
@@ -109,8 +111,8 @@ function removeFromCartHandler(e) {
 
 export function addToCart(product) {
   let cart = getLocalStorage("so-cart") || [];
-
   const existingIndex = cart.findIndex(
+    (item) => String(item.Id) === String(product.Id)
     (item) => String(item.Id) === String(product.Id)
   );
 
@@ -128,6 +130,7 @@ function emptyCartHandler() {
   localStorage.removeItem("so-cart");
   renderCartContents();
 }
+
 
 const emptyCartBtn = document.getElementById("emptyCart");
 if (emptyCartBtn) {
