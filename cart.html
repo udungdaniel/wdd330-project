@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sleep Outside | Cart</title>
+  <script type="module" crossorigin src="/wdd330-project/assets/utils-CQY4PpNB.js"></script>
+  <script type="module" crossorigin src="/wdd330-project/assets/cart-B1UehgOl.js"></script>
+  <link rel="stylesheet" crossorigin href="/wdd330-project/assets/style-DtX89cLA.css">
+</head>
+<body>
+  <header class="divider">
+    <h1>Shopping Cart</h1>
+    <nav>
+      <a href="index.html">Home</a> |
+      <a href="product-listing.html">Products</a> |
+      <a href="checkout.html">Checkout</a>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <ul class="product-list"></ul>
+      <div id="cart-totals"></div>
+      <button id="emptyCart" class="btn">Empty Cart</button>
+    </section>
+  </main>
+
+  <footer class="divider">
+    <p>&copy; <span id="year"></span> Sleep Outside</p>
+  </footer>
+
+  <script>
+    // update footer year automatically
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
