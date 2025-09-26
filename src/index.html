@@ -9,6 +9,7 @@
 </head>
 
 <body>
+  <!-- Dynamic Header -->
   <div id="header"></div>
 
   <main class="divider">
@@ -65,15 +66,16 @@
     </section>
   </main>
 
+  <!-- Dynamic Footer -->
   <div id="footer"></div>
 
-  <script src="./js/main.js" type="module"></script>
+  <!-- Scripts -->
+  <script type="module" src="./js/main.js"></script>
+  <script type="module" src="./js/home.js"></script>
   <script type="module">
     import Alert from "./js/Alert.js";
     new Alert("./json/alerts.json").showAlerts();
   </script>
-  <script type="module" src="./js/header.js"></script>
-  <script type="module" src="./js/home.js"></script>
 </body>
 
 </html>
