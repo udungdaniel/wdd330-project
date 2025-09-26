@@ -1,4 +1,4 @@
-import{g as o}from"./utils-CQY4PpNB.js";/* empty css              */import{P as e}from"./productData-BDL79EoI.js";import{a as n}from"./cart-B1UehgOl.js";const r=o("product"),d=new e("tents");function a(t){if(!t){document.querySelector("#product-details").innerHTML="<p>Product not found.</p>";return}document.querySelector("#product-details").innerHTML=`
+import{g as o}from"./utils-B3jpzjNX.js";/* empty css              */import{P as e}from"./productData-BDL79EoI.js";import{a as n}from"./cart-B6IKq8Cr.js";const r=o("product"),d=new e("tents");function a(t){if(!t){document.querySelector("#product-details").innerHTML="<p>Product not found.</p>";return}document.querySelector("#product-details").innerHTML=`
     <h2>${t.Name}</h2>
     <p>${t.Description}</p>
     <p><strong>Price:</strong> $${t.Price}</p>
