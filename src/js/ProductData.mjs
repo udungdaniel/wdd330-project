@@ -1,33 +1,42 @@
 // Utility function to convert a fetch response to JSON
-function convertToJson(res) {
+async function convertToJson(res) {
   if (res.ok) {
     return res.json();
   } else {
-    throw new Error("Bad Response");
+    throw new Error(`Bad Response: ${res.status}`);
   }
 }
 
+// Base URL from Vite environment variable
+const baseURL = import.meta.env.VITE_SERVER_URL;
+
 // ProductData class
 export default class ProductData {
-  constructor(category) {
-    this.category = category;
-    this.path = `../json/${this.category}.json`; // adjust path if needed
+  constructor() {
+    // No need for category/path here; getData will receive category as parameter
   }
 
-  // Fetch data for this category
-  async getData() {
+  // Fetch data for a given category
+  async getData(category) {
     try {
-      const response = await fetch(this.path);
-      return convertToJson(response);
+      const response = await fetch(`${baseURL}products/search/${category}`);
+      const data = await convertToJson(response);
+      return data.Result || []; // API returns { Result: [...] }
     } catch (err) {
       console.error("Error loading product data:", err);
       return [];
     }
   }
 
-  // Find a single product by ID
+  // Fetch a single product by ID
   async findProductById(id) {
-    const products = await this.getData();
-    return products.find((item) => item.Id === id);
+    try {
+      const response = await fetch(`${baseURL}product/${id}`);
+      const data = await convertToJson(response);
+      return data.Result || data; // API might wrap in Result or return single object
+    } catch (err) {
+      console.error(`Error fetching product with ID ${id}:`, err);
+      return null;
+    }
   }
 }
