@@ -1,6 +1,6 @@
 // js/main.js
 import { loadHeaderFooter, getLocalStorage } from "./utils.mjs";
-import { updateProductCards } from "./product-listing.js";
+//import { updateProductCards } from "./product-listing.js";
 // import { renderDiscounts } from "./discounts.js"; // optional module for homepage discounts
 
 //  Load header and footer dynamically
