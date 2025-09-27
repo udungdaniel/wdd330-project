@@ -1,4 +1,4 @@
-import{r as d,l as m,g as l}from"./utils-DKSz241K.js";/* empty css              */import{P as y}from"./productData-vyC4-ngc.js";function g(t){var e,r;return`
+import{r as d,l as m,g as l}from"./utils-DKSz241K.js";/* empty css              */import{P as y}from"./ProductData-vyC4-ngc.js";function g(t){var e,r;return`
     <li class="product-card">
       <a href="/product_pages/?product=${t.Id}">
         <img src="${((e=t.Images)==null?void 0:e.PrimaryMedium)||""}" alt="${t.Name}">
