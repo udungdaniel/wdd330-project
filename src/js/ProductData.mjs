@@ -10,18 +10,13 @@ async function convertToJson(res) {
 // Base URL from Vite environment variable
 const baseURL = import.meta.env.VITE_SERVER_URL;
 
-// ProductData class
 export default class ProductData {
-  constructor() {
-    // No need for category/path here; getData will receive category as parameter
-  }
-
   // Fetch data for a given category
   async getData(category) {
     try {
       const response = await fetch(`${baseURL}products/search/${category}`);
       const data = await convertToJson(response);
-      return data.Result || []; // API returns { Result: [...] }
+      return data.Result || [];
     } catch (err) {
       console.error("Error loading product data:", err);
       return [];
@@ -33,10 +28,24 @@ export default class ProductData {
     try {
       const response = await fetch(`${baseURL}product/${id}`);
       const data = await convertToJson(response);
-      return data.Result || data; // API might wrap in Result or return single object
+      return data.Result || data;
     } catch (err) {
       console.error(`Error fetching product with ID ${id}:`, err);
       return null;
+    }
+  }
+
+  // Fetch products by search query
+  async searchProducts(query) {
+    try {
+      const response = await fetch(
+        `${baseURL}products/search?q=${encodeURIComponent(query)}`
+      );
+      const data = await convertToJson(response);
+      return data.Result || [];
+    } catch (err) {
+      console.error(`Error searching products with query "${query}":`, err);
+      return [];
     }
   }
 }
