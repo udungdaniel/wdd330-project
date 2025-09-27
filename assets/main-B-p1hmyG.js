@@ -1,0 +1,1 @@
+import{l as t}from"./utils-DKSz241K.js";async function n(){await t()}function o(){typeof updateProductCards=="function"&&updateProductCards()}function i(){typeof renderDiscounts=="function"&&renderDiscounts()}async function e(){await n(),o(),i()}document.addEventListener("DOMContentLoaded",e);
