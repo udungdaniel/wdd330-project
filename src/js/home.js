@@ -1,4 +1,4 @@
-import ProductData from "./ProductData.mjs";
+import ExternalServices from "./ExternalServices.mjs";
 
 function formatPrice(price) {
   return `$${price.toFixed(2)}`;

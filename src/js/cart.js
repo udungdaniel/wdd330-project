@@ -1,140 +1,30 @@
-import { getLocalStorage } from "./utils.mjs";
+import { getLocalStorage, loadHeaderFooter } from "./utils.mjs";
+
+loadHeaderFooter();
 
 function renderCartContents() {
-  const cartItems = getLocalStorage("so-cart") || [];
-  const productList = document.querySelector(".product-list");
-  const totalsDiv = document.getElementById("cart-totals");
-
-  if (!productList) return; // safety check
-
-  if (cartItems.length === 0) {
-    productList.innerHTML = "<p>Your cart is empty at the moment, please make a purchase while stock last.</p>";
-    if (totalsDiv) totalsDiv.innerHTML = ""; // clear totals
-    return;
-  }
-
+  const cartItems = getLocalStorage("so-cart");
   const htmlItems = cartItems.map((item) => cartItemTemplate(item));
-  productList.innerHTML = htmlItems.join("");
-
-  // add event listeners to remove buttons
-  document.querySelectorAll(".remove-from-cart").forEach((btn) => {
-    btn.addEventListener("click", removeFromCartHandler);
-  });
-
-  // totals calculation
-  let originalTotal = 0;
-  let discountedTotal = 0;
-  cartItems.forEach((item) => {
-    const qty = item.quantity || 1;
-    const orig =
-      item.SuggestedRetailPrice || item.ListPrice || item.FinalPrice || 0;
-    const disc = item.FinalPrice || item.ListPrice || 0;
-    originalTotal += orig * qty;
-    discountedTotal += disc * qty;
-  });
-  const discountAmount = originalTotal - discountedTotal;
-
-  if (totalsDiv) {
-    totalsDiv.innerHTML = `
-      <div class="cart-footer">
-        <p class="cart-total">Total: <span class="old-price">${formatPrice(
-      originalTotal
-    )}</span></p>
-        <p class="cart-total">Discount: <span class="discount-indicator">-${formatPrice(
-      discountAmount
-    )}</span></p>
-        <p class="cart-total">To Pay: <span class="new-price">${formatPrice(
-      discountedTotal
-    )}</span></p>
-      </div>
-    `;
-  }
-}
-
-
-function formatPrice(price) {
-  return `$${price.toFixed(2)}`;
+  document.querySelector(".product-list").innerHTML = htmlItems.join("");
 }
 
 function cartItemTemplate(item) {
-  let priceHtml = "";
-  if (item.FinalPrice < item.SuggestedRetailPrice) {
-    const percent = Math.round(
-      ((item.SuggestedRetailPrice - item.FinalPrice) /
-        item.SuggestedRetailPrice) *
-      100,
-    );
-    priceHtml = `<span class="discount">-${percent}% OFF</span> <span class="old-price">${formatPrice(
-      item.SuggestedRetailPrice,
-    )}</span> <span class="new-price">${formatPrice(item.FinalPrice)}</span>`;
-  } else {
-    priceHtml = formatPrice(item.FinalPrice);
-  }
-
-  const newItem = `
-  <li class="cart-card divider">
-    <span class="remove-from-cart" data-id="${item.Id
-    }" style="cursor:pointer; color:red; float:right; font-weight:bold;">&times;</span>
-    <a href="#" class="cart-card__image">
-      <img
-        src="${item.Image}"
-        alt="${item.Name}"
-      />
-    </a>
-    <a href="#">
-      <h2 class="card__name">${item.Name}</h2>
-    </a>
-    <p class="cart-card__color">${item.Colors[0].ColorName}</p>
-    <p class="cart-card__quantity">qty: ${item.quantity || 1}</p>
-    <p class="cart-card__price">${priceHtml}</p>
-  </li>`;
+  const newItem = `<li class="cart-card divider">
+  <a href="#" class="cart-card__image">
+    <img
+      src="${item.Image}"
+      alt="${item.Name}"
+   >
+  </a>
+  <a href="#">
+    <h2 class="card__name">${item.Name}</h2>
+  </a>
+  <p class="cart-card__color">${item.Colors[0].ColorName}</p>
+  <p class="cart-card__quantity">qty: 1</p>
+  <p class="cart-card__price">$${item.FinalPrice}</p>
+</li>`;
 
   return newItem;
-}
-
-function removeFromCartHandler(e) {
-  const idToRemove = e.target.dataset.id;
-  let cart = getLocalStorage("so-cart") || [];
-  // Remove the desired item
-  const index = cart.findIndex(
-    (item) => String(item.Id) === String(idToRemove),
-  );
-  if (index !== -1) {
-    cart.splice(index, 1);
-    localStorage.setItem("so-cart", JSON.stringify(cart));
-    renderCartContents();
-  }
-}
-
-// NEW: addToCart function with quantity check
-export function addToCart(product) {
-  let cart = getLocalStorage("so-cart") || [];
-
-  const existingIndex = cart.findIndex(
-    (item) => String(item.Id) === String(product.Id),
-  );
-
-  if (existingIndex !== -1) {
-    // Increment quantity
-    cart[existingIndex].quantity = (cart[existingIndex].quantity || 1) + 1;
-  } else {
-    // Add new item
-    cart.push({ ...product, quantity: 1 });
-  }
-
-  localStorage.setItem("so-cart", JSON.stringify(cart));
-  renderCartContents();
-}
-
-// handle emptying the cart
-function emptyCartHandler() {
-  localStorage.removeItem("so-cart");
-  renderCartContents();
-}
-// event listener for emptying the cart
-const emptyCartBtn = document.getElementById("emptyCart");
-if (emptyCartBtn) {
-  emptyCartBtn.addEventListener("click", emptyCartHandler);
 }
 
 renderCartContents();
