@@ -1,4 +1,5 @@
 import ProductData from "./ProductData.mjs";
+import { alertMessage } from "./utils.mjs";
 
 // Utility functions
 function getQueryParam(param) {
@@ -11,8 +12,8 @@ function formatPrice(price) {
 }
 
 function getImage(product) {
-  if (product.Images && product.Images.PrimaryLarge) return product.Images.PrimaryLarge;
-  if (product.Images && product.Images.PrimaryMedium) return product.Images.PrimaryMedium;
+  if (product.Images?.PrimaryLarge) return product.Images.PrimaryLarge;
+  if (product.Images?.PrimaryMedium) return product.Images.PrimaryMedium;
   if (product.Image) return product.Image;
   return "";
 }
@@ -30,18 +31,18 @@ function renderProductDetail(product) {
   }
 
   const image = getImage(product);
-  const brand = (product.Brand && product.Brand.Name) || product.Brand || "";
+  const brand = product.Brand?.Name || product.Brand || "";
   const name = product.NameWithoutBrand || product.Name || "";
   const price = product.FinalPrice || product.ListPrice || product.SuggestedRetailPrice || 0;
   const oldPrice = product.SuggestedRetailPrice || product.ListPrice || 0;
-  const color = (product.Colors && product.Colors[0] && product.Colors[0].ColorName) || "";
+  const color = product.Colors?.[0]?.ColorName || "";
 
   let discountHTML = "";
-  let priceHTML = `<span class='new-price'>${formatPrice(price)}</span>`;
+  let priceHTML = `<span class="new-price">${formatPrice(price)}</span>`;
   if (oldPrice > price) {
     const percent = Math.round(((oldPrice - price) / oldPrice) * 100);
-    discountHTML = `<span class='discount-indicator'>-${percent}% OFF</span>`;
-    priceHTML = `<span class='old-price'>${formatPrice(oldPrice)}</span> <span class='new-price'>${formatPrice(price)}</span>`;
+    discountHTML = `<span class="discount">-${percent}%</span>`;
+    priceHTML = `<span class="old-price">${formatPrice(oldPrice)}</span> <span class="new-price">${formatPrice(price)}</span>`;
   }
 
   main.innerHTML = `
@@ -59,24 +60,19 @@ function renderProductDetail(product) {
   `;
 
   // Add to cart functionality
-  document.getElementById("addToCart").addEventListener("click", (e) => {
+  document.getElementById("addToCart").addEventListener("click", () => {
     const cart = JSON.parse(localStorage.getItem("so-cart")) || [];
     cart.push(product);
     localStorage.setItem("so-cart", JSON.stringify(cart));
 
-    const messageDiv = document.createElement("div");
-    messageDiv.textContent = "Successfully added to cart!";
-    messageDiv.style.color = "green";
-    messageDiv.style.marginTop = "10px";
-    e.target.parentElement.appendChild(messageDiv);
+    // Show alert
+    alertMessage(" Successfully added to cart!", "success");
 
-    setTimeout(() => {
-      messageDiv.remove();
-    }, 3000);
-
+    // Update cart count
     const sup = document.getElementById("cart-count");
     if (sup) sup.textContent = cart.length;
 
+    // Trigger animation
     const cartLink = document.querySelector(".cart-link");
     if (cartLink) cartLink.classList.toggle("saved");
   });
@@ -93,8 +89,7 @@ async function loadProductDetail() {
     renderProductDetail(product);
   } catch (err) {
     console.error("Error loading product:", err);
-    const main = document.querySelector("main.divider");
-    if (main) main.innerHTML = '<p>There was an error loading the product.</p>';
+    alertMessage("❌ There was an error loading the product.", "error");
   }
 }
 

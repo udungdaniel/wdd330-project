@@ -486,3 +486,67 @@ footer {
     border: 1px solid var(--light-grey);
   }
 }
+
+/* Alert styles */
+.alert {
+  padding: 1rem 1.25rem;
+  border-radius: 0.5rem;
+  margin: 1em 0;
+  font-weight: bold;
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+
+/* Error alert */
+.alert.error {
+  background-color: #c00;
+  color: #fff;
+}
+
+/* Success alert */
+.alert.success {
+  background-color: #28a745;
+  color: #fff;
+}
+
+/* Info alert (optional) */
+.alert.info {
+  background-color: #007bff;
+  color: #fff;
+}
+
+/* Existing alert list marquee styles */
+.alert-list {
+  background-color: #c00;
+  color: white;
+  margin: 1em 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.alert-list p {
+  margin: 0;
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.5rem;
+  font-weight: bold;
+  font-size: 1.1rem;
+  letter-spacing: 0.02em;
+  animation: alert-marquee 15s linear infinite;
+  white-space: nowrap;
+  display: block;
+  width: 100%;
+  overflow: visible;
+}
+
+@keyframes alert-marquee {
+  100% {
+    transform: translateX(-100%);
+  }
+
+  0% {
+    transform: translateX(100vw);
+  }
+}
