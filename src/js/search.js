@@ -1,4 +1,3 @@
-// search.js
 import { qs } from "./utils.mjs";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -13,8 +12,8 @@ document.addEventListener("DOMContentLoaded", () => {
             // If empty, default to "all"
             const searchTerm = query === "" ? "all" : query;
 
-            // Navigate to product list page with search param
-            window.location.href = `/product-listing.html?search=${encodeURIComponent(searchTerm)}`;
+            // relative path for GitHub Pages
+            window.location.href = `product-listing.html?search=${encodeURIComponent(searchTerm)}`;
         });
     }
 });

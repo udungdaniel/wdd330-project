@@ -36,11 +36,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const query = searchInput.value.trim();
             if (query) {
-                // Redirect with search parameter
-                window.location.href = `/product-listing.html?search=${encodeURIComponent(query)}`;
+                // ✅ relative path for GitHub Pages
+                window.location.href = `product-listing.html?search=${encodeURIComponent(query)}`;
             } else {
-                // If empty, just reload without forcing "tents"
-                window.location.href = `/product-listing.html`;
+                // ✅ relative path
+                window.location.href = `product-listing.html`;
             }
         });
     }
