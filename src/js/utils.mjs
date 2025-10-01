@@ -44,7 +44,6 @@ export async function loadHeaderFooter() {
   const headerElement = document.querySelector("#main-header");
   const footerTemplate = await loadTemplate("../partials/footer.html");
   const footerElement = document.querySelector("#main-footer");
-
   renderWithTemplate(headerTemplate, headerElement);
   renderWithTemplate(footerTemplate, footerElement);
 }
@@ -62,16 +61,13 @@ export function alertMessage(message, scroll = true) {
   const alert = document.createElement("div");
   alert.classList.add("alert");
   alert.innerHTML = `<p>${message}</p><span class="close">X</span>`;
-
   alert.addEventListener("click", function (e) {
     if (e.target.classList.contains("close")) {
       alert.remove();
     }
   });
-
   const main = document.querySelector("main");
   main.prepend(alert);
-
   if (scroll) window.scrollTo(0, 0);
 }
 

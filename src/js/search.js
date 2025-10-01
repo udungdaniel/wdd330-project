@@ -1,15 +1,20 @@
-// js/search.js
-import { renderListWithTemplate } from "./utils.mjs";
-import ProductListing from "./ProductList.mjs";
+// search.js
+import { qs } from "./utils.mjs";
 
-document.getElementById("search-form")
-    .addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const query = document.getElementById("search-input").value.trim();
+document.addEventListener("DOMContentLoaded", () => {
+    const searchForm = qs("#search-form");
+    const searchInput = qs("#search-input");
 
-        // If empty, default to "all"
-        const searchTerm = query === "" ? "all" : query;
+    if (searchForm && searchInput) {
+        searchForm.addEventListener("submit", (e) => {
+            e.preventDefault();
 
-        // Navigate to product list page with search param (must use "search")
-        window.location.href = `/wdd330-project/product_listing/index.html?search=${encodeURIComponent(searchTerm)}`;
-    });
+            const query = searchInput.value.trim();
+            // If empty, default to "all"
+            const searchTerm = query === "" ? "all" : query;
+
+            // Navigate to product list page with search param
+            window.location.href = `/product-listing.html?search=${encodeURIComponent(searchTerm)}`;
+        });
+    }
+});
